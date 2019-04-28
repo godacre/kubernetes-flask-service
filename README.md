@@ -9,6 +9,9 @@ Ansible delivered clustered Flask web service ran through Kubernetes on AWS
 ## Notes
 This code is designed to be run from a blank Centos7 EC2 Bastion instance. Before running ./controller.sh to spin up the service, there are a number of values that will need to be supplemented with your AWS credentials. Please see below for details.
 
+## Usage
+`./controller.sh`
+
 ## Prerequisites 
 ### ./controller.sh
 Line 21: export AWS_ACCESS_KEY_ID= **AWS_ACCESS_KEY_HERE** (This value needs to be changed for your AWS IAM Access Key)
