@@ -30,4 +30,9 @@ For Ansible to access the newly provisioned EC2 instances for configuration, you
 Once project files exist on Bastion host, you will need to change a couple of permissions. Run `chmod +x ./controller` & `chmod +x inventory/ec2.py`
 
 ## Areas of improvement - to-do
-This project does not set-up an Ingress controller for load balanced access to the K8s cluster. As it stands, the flask app can be accessed through `<worker_ec2_public_ip>:<k8s_service_nodeport_port>`
+### 1- 
+This project does not set-up an Ingress controller for load balanced access to the K8s cluster. As it stands, the flask app can be accessed through `<worker_ec2_public_ip>:31234`  
+### 2- 
+During the initial installation of dependencies and ssh'ing to new EC2 hosts, there will be a number of prompts which you will need to enter `y` OR `yes` to. Specifically during Ansible's first ssh to the new hosts, you will need to enter `yes` for each host.
+
+
