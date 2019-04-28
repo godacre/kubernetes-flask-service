@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anagram-app
+spec:
+  selector:
+    matchLabels:
+      run: anagram-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: anagram-app
+    spec:
+      containers:
+      - name: anagram-app
+        image: anagram_app:1.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+

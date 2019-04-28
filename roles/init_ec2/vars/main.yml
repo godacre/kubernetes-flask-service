@@ -1,0 +1,11 @@
+---
+# vars file for init_ec2
+  instance_type: t2.micro
+  security_group: cluster
+  image: CENTOS7_AMI_ID_HERE
+  keypair: EC2_KEYPAIR_HERE
+  region: eu-west-2
+  count: 1
+  aws_access_key: AWS_ACCESS_KEY_HERE
+  aws_secret_key: AWS_SECRET_KEY_HERE
+

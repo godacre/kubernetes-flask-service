@@ -1,0 +1,12 @@
+---
+- name: Copy dependencies to nodes
+  copy:
+    src: files
+    dest: /home/centos
+
+
+- name: Build docker image from supplied Dockerfile
+  shell:
+    cmd: docker build -t anagram_app:1.0 .
+    chdir: /home/centos/files
+  become: yes

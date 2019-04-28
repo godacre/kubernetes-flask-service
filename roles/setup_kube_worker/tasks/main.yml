@@ -1,0 +1,5 @@
+---
+# tasks file for setup_kube_worker
+
+- import_tasks: join_cluster.yml
+

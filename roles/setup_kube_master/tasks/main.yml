@@ -1,0 +1,6 @@
+---
+# tasks file for setup_kube_master
+
+- import_tasks: install_dependencies.yml
+- import_tasks: start_cluster.yml
+

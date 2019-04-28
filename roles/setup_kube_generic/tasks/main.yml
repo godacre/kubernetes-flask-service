@@ -1,0 +1,4 @@
+---
+# tasks file for setup_kube
+
+- import_tasks: install_dependencies.yml

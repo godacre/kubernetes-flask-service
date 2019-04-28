@@ -1,0 +1,12 @@
+---
+- name: Retrieve join command from master (dynamic-inventory)
+  set_fact:
+    join_command: '{{ master_promote.join_command }}'
+ 
+
+- name: join cluster
+  shell: "{{ join_command }} --ignore-preflight-errors all  >> node_joined.txt"
+  args:
+    chdir: $HOME
+    creates: node_joined.txt
+  become: yes

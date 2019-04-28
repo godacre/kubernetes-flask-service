@@ -1,0 +1,4 @@
+---
+# vars file for setup_kube_worker
+
+  master_promote: '{{ hostvars[groups["tag_Type_master"][0]] }}'

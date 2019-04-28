@@ -1,0 +1,150 @@
+---
+# Create SG
+  - name: Create AWS SG
+    ec2_group:
+      name: "{{ security_group }}"
+      description: SG for Kube cluster
+      region: "{{ region }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 443
+          to_port: 443
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 6443
+          to_port: 6443
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 5000
+          to_port: 5000
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 30000
+          to_port: 32767
+          cidr_ip: 0.0.0.0/0 
+        - proto: tcp
+          from_port: 10250
+          to_port: 10250
+          cidr_ip: 0.0.0.0/0
+      rules_egress:
+        - proto: all
+          cidr_ip: 0.0.0.0/0
+
+
+# Start worker ec2 instances
+  - name: Start EC2 workers
+    ec2:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      group: "{{ security_group }}"
+      instance_type: "{{ instance_type }}"
+      image: "{{ image }}"
+      wait: true
+      region: "{{ region }}"
+      keypair: "{{ keypair }}"
+      count_tag: 
+        Name: kube-worker
+      exact_count: 2
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: 8
+          delete_on_termination: yes
+    register: ec2_workers
+
+
+# Start master ec2 instances
+  - name: Start EC2 master
+    ec2:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      group: "{{ security_group }}"
+      instance_type: "{{ instance_type }}"
+      image: "{{ image }}"
+      wait: true
+      region: "{{ region }}"
+      keypair: "{{ keypair }}"
+      count_tag:
+        Name: kube-master
+      exact_count: 1
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: 8
+          delete_on_termination: yes
+    register: ec2_master
+
+
+# Add worker instances to hosts
+#  - name: Configure hosts with worker details
+#    add_host:
+#      name: "{{ item.public_ip }}"
+#      group: workers
+#    with_items: "{{ ec2_workers.instances }}"
+
+
+# Add master instance to hosts
+#  - name: Configure hosts with worker details
+#    add_host:
+#      name: "{{ item.public_ip }}"
+#      group: master
+#    with_items: "{{ ec2_master.instances }}"
+
+
+# Tag the worker instances
+  - name: Tag the worker EC2s
+    ec2_tag:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      resource: "{{ item.id }}"
+      region: "{{ region }}"
+      state: "present"
+    with_items: "{{ ec2_workers.instances }}"
+    args:
+      tags:
+        Type: worker
+        Name: kube-worker
+
+
+# Tag the master instance
+  - name: Tag the master EC2s
+    ec2_tag:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      resource: "{{ item.id }}"
+      region: "{{ region }}"
+      state: "present"
+    with_items: "{{ ec2_master.instances }}"
+    args:
+      tags:
+        Type: master
+        Name: kube-master
+
+
+# Wait for worker instances
+  - name: Wait for worker EC2s SSH
+    wait_for:
+      host: "{{ item.public_ip }}"
+      port: 22
+      state: started
+    with_items: "{{ ec2_workers.instances }}"
+
+
+# Wait for master instances
+  - name: Wait for master EC2s SSH
+    wait_for:
+      host: "{{ item.public_ip }}"
+      port: 22
+      state: started
+    with_items: "{{ ec2_master.instances }}"
+

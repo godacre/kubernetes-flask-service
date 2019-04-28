@@ -1,0 +1,45 @@
+---
+- name: Provision ec2 cluster
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  roles:
+    - init_ec2
+
+# Refreshes dynamic inventory with newly created EC2s 
+  post_tasks:
+    - meta: refresh_inventory
+
+
+- name: Install K8s cluster generic dependencies
+  hosts: security_group_cluster
+  gather_facts: true
+
+  roles:
+  - setup_kube_generic
+
+
+- name: Setup K8s master node
+  hosts: tag_Name_kube_master
+  gather_facts: true
+
+  roles:
+  - setup_kube_master
+
+
+- name: Setup K8s worker nodes
+  hosts: tag_Name_kube_worker
+  gather_facts: true
+
+  roles:
+  - setup_kube_worker 
+  - build_app
+
+
+- name: Deploy app onto K8s
+  hosts: tag_Name_kube_master
+  gather_facts: false
+
+  roles:
+  - deploy_app

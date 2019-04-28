@@ -1,0 +1,69 @@
+---
+- name: Install Docker
+  yum:
+    name: docker
+    state: present
+    update_cache: true
+  become: yes
+
+
+- name: Start Docker
+  service:
+    name: docker
+    state: started
+  become: yes
+
+
+- name: Disable selinux
+  command: setenforce 0
+  become: yes
+
+
+- name: Enable ip6table lookup
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: 1
+    state: present
+  become: yes
+
+
+- name: Enable iptable lookup
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+  become: yes
+
+
+- name: Add K8s repo
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes YUM repository
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    gpgcheck: yes
+  become: yes
+
+
+- name: Install kubelet
+  yum:
+    name: kubelet-1.14.0
+    state: present
+    update_cache: true
+  become: yes
+
+
+- name: Install kubeadm
+  yum:
+    name: kubeadm-1.14.0
+    state: present
+  become: yes
+
+
+- name: Start kubelet
+  service:
+    name: kubelet
+    enabled: yes
+    state: started
+  become: yes
+

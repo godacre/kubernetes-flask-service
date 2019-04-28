@@ -1,0 +1,5 @@
+---
+# tasks file for deploy_app
+
+- import_tasks: deploy_kube_app.yml
+

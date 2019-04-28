@@ -1,0 +1,4 @@
+---
+# tasks file for deploy_app
+
+- import_tasks: build_docker.yml

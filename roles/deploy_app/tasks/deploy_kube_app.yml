@@ -1,0 +1,11 @@
+---
+- name: Copy dependencies to master
+  copy:
+    src: files
+    dest: /home/centos
+
+
+- name: Deploy K8s deployment/service/pods
+  shell:
+    cmd: kubectl apply -f .
+    chdir: /home/centos/files
