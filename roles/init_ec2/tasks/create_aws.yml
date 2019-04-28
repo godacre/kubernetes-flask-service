@@ -85,22 +85,6 @@
     register: ec2_master
 
 
-# Add worker instances to hosts
-#  - name: Configure hosts with worker details
-#    add_host:
-#      name: "{{ item.public_ip }}"
-#      group: workers
-#    with_items: "{{ ec2_workers.instances }}"
-
-
-# Add master instance to hosts
-#  - name: Configure hosts with worker details
-#    add_host:
-#      name: "{{ item.public_ip }}"
-#      group: master
-#    with_items: "{{ ec2_master.instances }}"
-
-
 # Tag the worker instances
   - name: Tag the worker EC2s
     ec2_tag:
