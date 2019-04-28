@@ -18,8 +18,8 @@ sudo pip install -q boto boto3
 echo -e "\n --- Dependencies installed --- \n"
 
 echo -e " --- Exporting env variables --- "
-export AWS_ACCESS_KEY_ID= 
-export AWS_SECRET_ACCESS_KEY= 
+export AWS_ACCESS_KEY_ID= **AWS_ACCESS_KEY_HERE**
+export AWS_SECRET_ACCESS_KEY= **AWS_ACCESS_KEY_HERE**
 export EC2_INI_PATH=./inventory/ec2.ini
 export ANSIBLE_INVENTORY=./inventory
 echo -e " --- Variables exported --- \n"
