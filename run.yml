@@ -22,7 +22,7 @@
 
 - name: Setup K8s master node
   hosts: tag_Name_kube_master
-  gather_facts: true
+  gather_facts: false
 
   roles:
   - setup_kube_master
@@ -30,7 +30,7 @@
 
 - name: Setup K8s worker nodes
   hosts: tag_Name_kube_worker
-  gather_facts: true
+  gather_facts: false
 
   roles:
   - setup_kube_worker 
